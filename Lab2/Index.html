@@ -1,1 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Card Example</title>
+</head>
+<body>
+    <div id="new-content-container"></div>
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Card Title</h2>
+            <span class="close" onclick="closeCard(this)">✖</span>
+        </div>
+        <div class="card-content">
+            <p>This is the content of the card. You can add any information you want here.</p>
+            <button onclick="createNewContent()">Add New Content</button>            
+        </div>		
+    </div>
 
+    <script>
+		const words = [
+			"lorem", "ipsum", "dolor", "sit", "amet", "consectetur",
+			"adipiscing", "elit", "sed", "do", "eiusmod", "tempor",
+			"incididunt", "ut", "labore", "et", "dolore", "magna",
+			"aliqua", "ut", "enim", "ad", "minim", "veniam", "quis",
+			"nostrud", "exercitation", "ullamco", "laboris", "nisi",
+			"ut", "aliquip", "ex", "ea", "commodo", "consequat"
+		];
+
+		function getRandomWord() {
+			const randomIndex = Math.floor(Math.random() * words.length);
+			return words[randomIndex];
+		}
+
+		function generateRandomText(wordCount = 10) {
+			let randomText = "";
+			for (let i = 0; i < wordCount; i++) {
+				randomText += getRandomWord() + " ";
+			}
+			return randomText.trim();
+		}
+
+	
+        function stringToDOM(htmlString) {
+            var tempDiv = document.createElement('div');
+            tempDiv.innerHTML = htmlString;
+            return tempDiv.firstChild; // returns the first child element
+        }
+		
+        function closeCard(element) {
+            const card = element.closest('.card'); // Find the closest card
+            if (card) {
+                card.style.display = 'none'; // Hide the card when close icon is clicked
+            }
+        }
+		
+		function getRandomNumber(min, max) {
+			return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+        function createNewContent() {
+			var randomText = generateRandomText(getRandomNumber(50, 200));
+            var str = `<div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Card Title</h2>
+                            <span class="close" onclick="closeCard(this)">✖</span>
+                        </div>
+                        <div class="card-content">
+                            <p>${randomText}</p>
+                            <button onclick="createNewContent()">Add New Content</button>            
+                        </div>		
+                    </div>`;
+            const container = document.getElementById('new-content-container');            			
+            var dom = stringToDOM(str);
+            container.appendChild(dom);
+            console.log(dom);
+        }
+    </script>
+</body>
+</html>
