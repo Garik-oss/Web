@@ -1,4 +1,38 @@
 <?php
+// Include the database connection file
+include('db_connect.php'); // Make sure this path is correct
+
+// Method to save registration data to the database
+function saveToDb($registration_data) {
+    global $conn; // Use the global $conn for the database connection
+
+    // Collect the registration data from the array
+    $first_name = $registration_data['first_name'];
+    $last_name = $registration_data['last_name'];
+    $email = $registration_data['email'];
+    $password = $registration_data['password'];
+    $dob = $registration_data['dob'];
+    $gender = $registration_data['gender'];
+    $country = $registration_data['country'];
+    $file_uploaded = $registration_data['file_uploaded'];
+
+    // Prepare the SQL statement to insert data into the Users table
+    $stmt = $conn->prepare("INSERT INTO Users (first_name, last_name, email, password, dob, gender, country, file_uploaded) 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+    // Bind the parameters to the SQL statement
+    $stmt->bind_param("ssssssss", $first_name, $last_name, $email, $password, $dob, $gender, $country, $file_uploaded);
+
+    // Execute the statement
+    if ($stmt->execute()) {
+        echo "User registered successfully!";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    // Close the statement
+    $stmt->close();
+}
 
 function saveToJsonFile($data) {
     // JSON folder where the data will be stored
@@ -132,6 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }        
 
         saveToJsonFile($registration_data);
+        saveToDb($registration_data);
     }
 }
 ?>
